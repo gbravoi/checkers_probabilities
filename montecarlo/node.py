@@ -3,15 +3,16 @@ from math import log, sqrt
 
 class Node:
 
-	def __init__(self, state):
+	def __init__(self, state,player_number=None,transition_action={}):
 		self.state = state
+		self.transition_action=transition_action #save information of the action from the parent to bring to current status
 		self.win_value = 0
 		self.policy_value = None
 		self.visits = 0
 		self.parent = None
 		self.children = []
 		self.expanded = False
-		self.player_number = None
+		self.player_number = player_number
 		self.discovery_factor = 0.35
 
 	def update_win_value(self, value):
@@ -19,7 +20,9 @@ class Node:
 		self.visits += 1
 
 		if self.parent:
-			self.parent.update_win_value(value)
+			#check if different color, because win from one color is loss for the other
+			win_multiplier = 1 if self.parent.player_number == self.player_number else -1
+			self.parent.update_win_value(value*win_multiplier)
 
 	def update_policy_value(self, value):
 		self.policy_value = value
