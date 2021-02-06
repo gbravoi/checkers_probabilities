@@ -3,9 +3,9 @@ from math import log, sqrt
 
 class Node:
 
-	def __init__(self, state,player_number=None,transition_action={}):
+	def __init__(self, state,player_number=None,transition_move=None):
 		self.state = state
-		self.transition_action=transition_action #save information of the action from the parent to bring to current status. {(from_row, from_col):(to_row, to_col)}
+		self.transition_move=transition_move #save information of the action from the parent to bring to current status. {(from_row, from_col):(to_row, to_col)}
 		self.action_reward=0 #reward for certain actions like capturing a checker or becoming a king (action to move from parent to child)
 		self.win_value = {} #store rewards for both player when doing backpropagation of the simulted game
 		self.game_points=[]#store final points of that game. computed as rewanr_payer- reward_opponent
