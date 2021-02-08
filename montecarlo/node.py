@@ -1,5 +1,6 @@
 import random
 from math import log, sqrt
+from seoulai_gym.envs.checkers.rules import Rules
 
 class Node:
 
@@ -7,6 +8,7 @@ class Node:
 		self.state = state
 		self.transition_move=transition_move #save information of the action from the parent to bring to current status. {(from_row, from_col):(to_row, to_col)}
 		self.action_reward=0 #reward for certain actions like capturing a checker or becoming a king (action to move from parent to child)
+		#note this reward is of the oponent player that left the board in current state
 		self.win_value = {} #store rewards for both player when doing backpropagation of the simulted game
 		self.game_points=[]#store final points of that game. computed as rewanr_payer- reward_opponent
 		self.policy_value = None
@@ -14,7 +16,7 @@ class Node:
 		self.parent = None
 		self.children = []
 		self.expanded = False
-		self.player_number = player_number
+		self.player_number = player_number#who needs to move
 		self.discovery_factor =35.0
 
 	def update_win_value(self, value):
@@ -22,16 +24,19 @@ class Node:
 		we pass final value for each player. 
 		(At the end we should extrat the corresponding reward for the root node
 		"""
+		opponent_ptype=Rules.get_opponent_type(self.player_number) #the one that already move
 		#recover rewards below on the tree
 		if not isinstance(value,dict): #if not a dictionary (case when stop before winning/lossing)
 			value={}
 		if self.player_number not in value:#make sure player is in the dictionary
 			value[self.player_number]=0
+		if opponent_ptype  not in value:#make sure player is in the dictionary
+			value[opponent_ptype]=0
 		
 		self.win_value=value
 
-		#add win value in a dictionary with player number
-		self.win_value[self.player_number]+=self.action_reward		
+		#add win value in a dictionary with player number. reward of board asociated to movement of previos player.
+		self.win_value[opponent_ptype]+=self.action_reward		
 		self.visits += 1
 
 		if self.parent:#pass current rewards to the parent on the branch

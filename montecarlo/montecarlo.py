@@ -27,6 +27,15 @@ class MonteCarlo:
 		self.root_node = root_node
 		self.moves_prob=None
 
+		#set the following number
+		self.number_of_simulations=10
+		self.number_of_simulations_ending=5 #exploring deeper tree, reduce number of simulations no keep speed
+		self.max_depth=10 #simulaiton tree depth begining game
+		self.max_depth_ending=10 #simulaiton tree depth ending game (little pieces left)
+		self.ending_treshold=4 #number of pieces of a player to consider the game near end and change simulaiton tree depth
+		self.oponente_scaler=1.1 #number greater than 1, if 1 points are the same for player or oponente. if greater, any ventage of the oponent is being avoided
+
+
 	#functions child finder adapter to gym
 	def child_finder(self, node):
 		"""
@@ -163,7 +172,7 @@ class MonteCarlo:
 
 
 
-	def simulate(self, expansion_count = 1,max_depth=6):
+	def simulate(self):
 		"""
 		simulate N branches (N=expansion_count)
 		max_depth: max depth of the branches
@@ -171,6 +180,22 @@ class MonteCarlo:
 		we will expand always one level below root devel, simulating a random game. the result of all the random games will help
 		ro decide the probability to win performing that move.
 		"""
+		#max depth will depend on the number of pieces in board.
+		current_player=self.root_node.player_number
+		oponent_type=Rules.get_opponent_type(current_player)
+		n_player_pieces=len(Rules.get_positions(self.root_node.state.board_list, current_player, self.root_node.state.size))
+		n_oponent_pieces=len(Rules.get_positions(self.root_node.state.board_list, oponent_type, self.root_node.state.size))
+
+		max_depth=None
+		expansion_count = None
+		if n_player_pieces>self.ending_treshold and n_oponent_pieces>self.ending_treshold: #change depth of simulaiton tree
+			max_depth=self.max_depth
+			expansion_count=self.number_of_simulations
+		else:
+			max_depth=self.max_depth_ending
+			expansion_count=self.number_of_simulations_ending
+
+
 		for i in range(expansion_count):
 			current_node = self.root_node
 
@@ -200,8 +225,7 @@ class MonteCarlo:
 			#once it finished expanding (i.e sinulation in branch ended), save game points (PARENT SCORE)
 			player_score=child.win_value[child.parent.player_number]
 			oponent_score=child.win_value[Rules.get_opponent_type(child.parent.player_number)]
-			oponente_scaler=1.4 #number greater than 1, if 1 points are the same for player or oponente. if greater, any ventage of the oponent is being avoided
-			game_score=player_score-oponent_score*oponente_scaler
+			game_score=player_score-oponent_score*self.oponente_scaler
 			child.game_points.append(game_score)
 
 
