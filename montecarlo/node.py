@@ -48,35 +48,7 @@ class Node:
 		for child in children:
 			self.add_child(child)
 
-	def get_preferred_child(self, root_node):
-		best_children = []
-		best_score = float('-inf')
 
-		for child in self.children:
-			score = child.get_score(root_node)
-
-			if score > best_score:
-				best_score = score
-				best_children = [child]
-			elif score == best_score:
-				best_children.append(child)
-
-		return random.choice(best_children)
-
-	def get_score(self, root_node):
-		"""
-		get score, higher if root_node will win
-		"""
-		discovery_operand = self.discovery_factor * (self.policy_value or 1) * sqrt(log(self.parent.visits) / (self.visits or 1))
-
-		player_reward =  self.win_value[root_node.player_number]
-		sum_reward=sum(self.win_value.values())
-		winning_points=2*player_reward-sum_reward#player-oponentet reward
-		win_operand = winning_points / (self.visits or 1)#maye add factor here?
-
-		self.score = win_operand + discovery_operand
-
-		return self.score
 
 	def is_scorable(self):
 		return self.visits or self.policy_value != None

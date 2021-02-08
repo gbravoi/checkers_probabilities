@@ -148,20 +148,22 @@ class MonteCarlo:
 			self.estimate_probabilities()
 
 		#select best
-		best_move=None
+		best_move=[]
 		prob=0
 		for move in self.moves_prob:
 			if move.winning_prob>prob:
-				best_move=move
+				best_move=[move]
 				prob=move.winning_prob
+			elif move.winning_prob==prob:
+				best_move.append(move)
 		
 		self.moves_prob=None #reset
 
-		return best_move
+		return random.choice(best_move)
 
 
 
-	def simulate(self, expansion_count = 1,max_depth=20):
+	def simulate(self, expansion_count = 1,max_depth=6):
 		"""
 		simulate N branches (N=expansion_count)
 		max_depth: max depth of the branches
@@ -194,9 +196,13 @@ class MonteCarlo:
 				# print("depth: {}".format(current_depth))
 				self.random_rollout(child,max_depth,current_depth)
 				child.children = []
-				#once it finished expanding (i.e sinulation in branch ended), save game points
-				game_score=2*child.win_value[child.parent.player_number]-sum(child.win_value.values())
-				child.game_points.append(game_score)
+
+			#once it finished expanding (i.e sinulation in branch ended), save game points (PARENT SCORE)
+			player_score=child.win_value[child.parent.player_number]
+			oponent_score=child.win_value[Rules.get_opponent_type(child.parent.player_number)]
+			oponente_scaler=1.4 #number greater than 1, if 1 points are the same for player or oponente. if greater, any ventage of the oponent is being avoided
+			game_score=player_score-oponent_score*oponente_scaler
+			child.game_points.append(game_score)
 
 
 		if len(node.children):
