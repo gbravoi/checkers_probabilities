@@ -72,8 +72,9 @@ python integration_test.py
 ```
 
 You have 2 options: 
--watch a game where the computer play against other computer. Probabilities will be printed in the terminal, and the computer will choose the best move.
--Play against the computer. Probabilities will be printed in the terminal. Then, when is user turn, a promp will ask which of the available moves want to choose.
+* watch a game where the computer play against other computer. Probabilities will be printed in the terminal, and the computer will choose the best move.
+* Play against the computer. Probabilities will be printed in the terminal. Then, when is user turn, a promp will ask which of the available moves want to choose.
+
 
 To modify if if a game computer vs computer, or human vs computer change the following line in *integration_test.py*
 ```python
