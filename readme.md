@@ -64,3 +64,18 @@ self.oponente_scaler=1.1
 ```
 
 In here *self.ending_treshold* is the number of pieces to consider the game near and end (if any of the players has equal or lower quantity). When the game is ending, we may want to increase the depth of the games *self.max_depth_ending* to take into consideration that the pieces can be distanced and that kings have more possible movements. We could also want to reduce *self.number_of_simulations_ending* to reduce the needed total time to simulate and compute the probabilities
+
+## How to test code
+Run
+```
+python integration_test.py
+```
+
+You have 2 options: 
+-watch a game where the computer play against other computer. Probabilities will be printed in the terminal, and the computer will choose the best move.
+-Play against the computer. Probabilities will be printed in the terminal. Then, when is user turn, a promp will ask which of the available moves want to choose.
+
+To modify if if a game computer vs computer, or human vs computer change the following line in *integration_test.py*
+```python
+human_agent=a2 #set None if no human, else will take the turn of the agent (a1 or a2)
+```
