@@ -16,10 +16,10 @@ from seoulai_gym.envs.checkers.rules import Rules
 import seoulai_gym.envs.checkers.utils as checkers_utils
 
 #import montecarlo
-from mcts.montecarlo.node import Node
+from montecarlo.node import Node
 
 #other imports
-import game.checkers_move as cmove
+import montecarlo.checkers_move as cmove
 
 class MonteCarlo:
 
