@@ -12,7 +12,7 @@ from montecarlo.node import Node
 from montecarlo.montecarlo import MonteCarlo
 
 
-#import gym
+#import checkers rules
 from checkers.checkers import Checkers 
 from checkers.agents import RandomAgentLight
 from checkers.agents import RandomAgentDark
