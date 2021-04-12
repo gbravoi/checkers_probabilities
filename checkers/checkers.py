@@ -19,7 +19,7 @@ from rules import Rules
 
 
 class Checkers(Constants, Rules):
-    def __init__(self):
+    def __init__(self,initial_board=None):
         """Initialize checkers board and its visualization.
 
         Returns:
@@ -28,7 +28,7 @@ class Checkers(Constants, Rules):
         self.possible_moves = None
         self.piece_location = None
 
-        self.board = Board()
+        self.board = Board(initial_board=initial_board)
 
     def update_rewards(self,rewards_map):
         """Update rewards. Adding new reward is not allowed.

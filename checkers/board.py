@@ -6,6 +6,7 @@ Adapted by Gabriela B. to work with python 2.7 and ROS
 """
  
 import random
+import rospy
 
 from base import Constants
 from base import DarkPiece
@@ -42,32 +43,66 @@ class Rewards(object):
 
 class Board(Constants, Rules):
     def __init__(
-        self, size=8):
+        self, size=8, initial_board=None):
         """Board constructor.
 
         Args:
             size: Board size.
         """
         self.size = size
-        self.init()
+        self.init(initial_board)
         self.rewards = Rewards()
 
-    def init(self):
+    def init(self,initial_board=None):
         """Initialize board and setup pieces on board.
 
         Note: Dark pieces should be ALWAYS on the top of the board.
         """
+        def interpret_initial_board(initial_board):
+            self.board_list=[ #start with empty
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+            ]
+            for i in range(self.size):
+                for j in range(self.size):
+                    if initial_board[i][j]==self.DARK:
+                        self.board_list[i][j]=DarkPiece()
+                    elif initial_board[i][j]==self.LIGHT:
+                        self.board_list[i][j]=LightPiece()
+                    elif initial_board[i][j]==self.DARK_KING:
+                        piece=DarkPiece()
+                        piece.make_king()
+                        self.board_list[i][j]=piece
+                    elif initial_board[i][j]==self.LIGHT_KING:
+                        piece=LightPiece()
+                        piece.make_king()
+                        self.board_list[i][j]=piece
+                    else:
+                        rospy.logerr("Initial board not valid")
+                        rospy.signal_shutdown("Initial board not valid")
+
+
         half_size = self.size//2
-        self.board_list = [
-            sum([[None, DarkPiece()] for _ in range(half_size)], []),
-            sum([[DarkPiece(), None] for _ in range(half_size)], []),
-            sum([[None, DarkPiece()] for _ in range(half_size)], []),
-            sum([[None] for _ in range(self.size)], []),
-            sum([[None] for _ in range(self.size)], []),
-            sum([[LightPiece(), None] for _ in range(half_size)], []),
-            sum([[None, LightPiece()] for _ in range(half_size)], []),
-            sum([[LightPiece(), None] for _ in range(half_size)], []),
-        ]
+        self.board_list=None
+        if initial_board is None:
+            self.board_list = [
+                sum([[None, DarkPiece()] for _ in range(half_size)], []),
+                sum([[DarkPiece(), None] for _ in range(half_size)], []),
+                sum([[None, DarkPiece()] for _ in range(half_size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[None] for _ in range(self.size)], []),
+                sum([[LightPiece(), None] for _ in range(half_size)], []),
+                sum([[None, LightPiece()] for _ in range(half_size)], []),
+                sum([[LightPiece(), None] for _ in range(half_size)], []),
+            ]
+        else:
+            self.board_list=interpret_initial_board(initial_board)
 
     def update_rewards(
         self,
