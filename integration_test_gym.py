@@ -17,8 +17,8 @@ from montecarlo.montecarlo import MonteCarlo
 
 #import gym
 import seoulai_gym as gym
-from seoulai_gym.envs.checkers.agents import RandomAgentLight
-from seoulai_gym.envs.checkers.agents import RandomAgentDark
+from checkers.agents import RandomAgentLight
+from checkers.agents import RandomAgentDark
 
 
 

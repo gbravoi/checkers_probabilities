@@ -12,14 +12,14 @@ import numpy as np
 import copy
 
 #import gym
-from seoulai_gym.envs.checkers.rules import Rules
-import seoulai_gym.envs.checkers.utils as checkers_utils
+from checkers.rules import Rules
+import checkers.utils as checkers_utils
 
 #import montecarlo
-from montecarlo.node import Node
+from node import Node
 
 #other imports
-import montecarlo.checkers_move as cmove
+import checkers_move as cmove
 
 class MonteCarlo:
 

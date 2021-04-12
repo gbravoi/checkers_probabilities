@@ -1,6 +1,6 @@
 import random
 from math import log, sqrt
-from seoulai_gym.envs.checkers.rules import Rules
+from checkers.rules import Rules
 
 class Node:
 
