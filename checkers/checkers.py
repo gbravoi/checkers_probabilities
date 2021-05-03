@@ -69,7 +69,7 @@ class Checkers(Constants, Rules):
             done: Information about end of game.
             info: Additional information about current step.
         """
-        #get podible moves for highlight. First check for jumtps
+        #get podible moves for highlight (gym enviroment). First check for jumtps
         possible_jumps=self.get_valid_moves_jump(self.board.board_list, from_row, from_col)
         if len(possible_jumps)>0:
             self.possible_moves = possible_jumps

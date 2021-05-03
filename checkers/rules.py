@@ -188,6 +188,84 @@ class Rules(object):
                 return False
 
         return True
+    
+    @staticmethod
+    def check_was_jump(board_list, from_row, from_col, to_row, to_col):
+        """
+        Check if the movement is jump over an enemy piece
+        (asuming from is a piece of the current player)
+        return boolean
+        """
+        #current player
+        p = board_list[from_row][from_col]
+        between_row, between_col = Rules.get_between_position(from_row, from_col, to_row, to_col)
+        if between_row is not None and between_col is not None:
+            pp = board_list[between_row][between_col]
+            if pp is None or pp.ptype == p.ptype:
+                return False
+
+        return True
+
+    @staticmethod
+    def check_second_jum(board_list, from_row, from_col, to_row, to_col):
+        """
+        If was a jump, check if a second jump is posible.
+        """
+        #check last movement was a jump
+        previous_jump=Rules.check_was_jump(board_list, from_row, from_col, to_row, to_col)
+        if previous_jump:
+            new_from_row=to_row
+            new_from_col=to_col
+            #check if there are valis jumps
+            jumps_list=Rules.get_valid_moves_jump(board_list, new_from_row, new_from_col)#valid jumps where it landed
+            return len(jumps_list)>0
+
+        return False
+
+    @staticmethod 
+    def check_valid_move(board_list, ptype,from_row, from_col, to_row,to_col):
+        """
+        Check if movement is valid, and is being performed with current user checker
+        """
+        # don't move with opponent's piece
+        if ptype != board_list[from_row][from_col].ptype:
+            return False
+
+        #check if movement is valid
+        return Rules.validate_move(board_list, from_row, from_col, to_row, to_col)
+    
+    @staticmethod
+    def check_become_king(board_list, to_row,to_col,UP,DOWN,size):
+        """
+        Check if the new position of the checker is to be a king
+        size: how many cell has the board
+        UP, DOWN. Numerical representation to up and down directions.
+        """
+        p = board_list[to_row][to_col]
+        return (to_row == 0 and p.direction == UP) or (to_row == size-1 and p.direction == DOWN)
+
+    @staticmethod
+    def check_end_game(board_list,ptype, board_size):
+        """
+        check if end of game
+        ptype= type of current player
+        """
+        opponent_ptype=Rules.get_opponent_type(ptype)
+        #openent lost all his pieces?
+        oponent_no_pieces= len(Rules.get_positions(board_list, opponent_ptype, board_size)) == 0
+        if oponent_no_pieces:
+            return True
+        
+        #check if oponent can move
+        oponent_cant_move=len(Rules.generate_valid_moves(board_list, opponent_ptype, board_size)) == 0
+        if oponent_cant_move:
+            return True
+
+        return False
+        
+
+
+
 
     @staticmethod
     def get_between_position(

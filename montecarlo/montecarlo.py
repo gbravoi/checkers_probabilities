@@ -23,17 +23,17 @@ import checkers_move as cmove
 
 class MonteCarlo:
 
-	def __init__(self, root_node):
+	def __init__(self, root_node,number_of_simulations=10,number_of_simulations_ending=5,max_depth=10,max_depth_ending=10,ending_treshold=4,oponente_scaler=1.1):
 		self.root_node = root_node
 		self.moves_prob=None
 
 		#set the following number
-		self.number_of_simulations=10
-		self.number_of_simulations_ending=5 #exploring deeper tree, reduce number of simulations no keep speed
-		self.max_depth=10 #simulaiton tree depth begining game
-		self.max_depth_ending=10 #simulaiton tree depth ending game (little pieces left)
-		self.ending_treshold=4 #number of pieces of a player to consider the game near end and change simulaiton tree depth
-		self.oponente_scaler=1.1 #number greater than 1, if 1 points are the same for player or oponente. if greater, any ventage of the oponent is being avoided
+		self.number_of_simulations=number_of_simulations
+		self.number_of_simulations_ending=number_of_simulations_ending #exploring deeper tree, reduce number of simulations no keep speed
+		self.max_depth=max_depth #simulaiton tree depth begining game
+		self.max_depth_ending=max_depth_ending #simulaiton tree depth ending game (little pieces left)
+		self.ending_treshold=ending_treshold #number of pieces of a player to consider the game near end and change simulaiton tree depth
+		self.oponente_scaler=oponente_scaler #number greater than 1, if 1 points are the same for player or oponente. if greater, any adventage of the oponent is being avoided
 
 
 	#functions child finder adapter to gym
@@ -56,7 +56,7 @@ class MonteCarlo:
 			for to_move in all_moves:#select a move from that piece
 				child_board=copy.deepcopy(parent_board) #save board object
 				transition_move=cmove.Move(from_move,to_move,current_player)
-				obs, rew, done, info=child_board.move(current_player, transition_move.from_row(), transition_move.from_col(), transition_move.to_row(), transition_move.to_col())
+				obs, rew, done, info=child_board.move(current_player, transition_move.from_row, transition_move.from_col, transition_move.to_row, transition_move.to_col)
 				new_node=Node(child_board,oponent_type,transition_move)#new board after player type, next move: oponent
 				new_node.action_reward=rew #reward asociated to certain movements
 				node.add_child(new_node)#add child

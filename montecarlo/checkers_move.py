@@ -8,6 +8,11 @@ class Move:
 		self.player_number=player_number #player who perform the action
 		self.winning_prob=winning_prob
 
+		self.from_row=self.from_move[0]
+		self.from_col=self.from_move[1]
+		self.to_row=self.to_move[0]
+		self.to_col=self.to_move[1]
+
 	def print_move(self):
 		print("from ({},{}) to ({},{})  prob:{}".format(self.from_move[0],self.from_move[1],self.to_move[0],self.to_move[1],self.winning_prob))
 

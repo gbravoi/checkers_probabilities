@@ -132,6 +132,7 @@ class Board(Constants, Rules):
         to_row,
         to_col) :
         """Move piece across board and check validity of movement.
+        It will automatically perform any jumps and kings transformations
 
         Args:
             ptype: Type of piece making a move.
@@ -236,9 +237,32 @@ class Board(Constants, Rules):
         from_col,
         to_row,
         to_col) :
+        """
+        fuction only moves a piece form one position to other. Does not check rules
+        """
         self.board_list[to_row][to_col] = self.board_list[from_row][from_col]
         self.board_list[from_row][from_col] = None
         return {"moved": ((from_row, from_col), (to_row, to_col))}
+
+
+    def remove_piece(self,row, col):
+        """
+        Remove a piece of the board. Does not chekc for rules
+        (used when manually performing a jump)
+        """
+        self.board_list[row][col] = None
+
+    def transform_king(self,row,col):
+        """
+        Transform piece in that row,col to king
+        Does not check for rules
+        """
+        p = self.board_list[row][col]
+        p.make_king()
+
+
+
+
 
     @staticmethod
     def _can_opponent_move(
