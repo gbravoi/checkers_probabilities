@@ -8,6 +8,7 @@ Adapted by Gabriela B. to work with python 2.7 and ROS
 
 from base import Constants
 from base import Piece
+import rospy #to print debug info
 
 
 class Rules(object):
@@ -196,31 +197,29 @@ class Rules(object):
         (asuming from is a piece of the current player)
         return boolean
         """
+        # rospy.loginfo('from (%s ,%s), to: (%s , %s)',from_row,from_col,to_row,to_col)
         #current player
         p = board_list[from_row][from_col]
         between_row, between_col = Rules.get_between_position(from_row, from_col, to_row, to_col)
         if between_row is not None and between_col is not None:
             pp = board_list[between_row][between_col]
-            if pp is None or pp.ptype == p.ptype:
-                return False
-
-        return True
-
-    @staticmethod
-    def check_second_jum(board_list, from_row, from_col, to_row, to_col):
-        """
-        If was a jump, check if a second jump is posible.
-        """
-        #check last movement was a jump
-        previous_jump=Rules.check_was_jump(board_list, from_row, from_col, to_row, to_col)
-        if previous_jump:
-            new_from_row=to_row
-            new_from_col=to_col
-            #check if there are valis jumps
-            jumps_list=Rules.get_valid_moves_jump(board_list, new_from_row, new_from_col)#valid jumps where it landed
-            return len(jumps_list)>0
+            if pp is not None and pp.ptype != p.ptype:
+                return True
 
         return False
+
+    @staticmethod
+    def check_jump_is_possible(board_list, to_row, to_col):
+        """
+        check if more jump movements are  posible from where the piece landed
+        """
+        new_from_row=to_row
+        new_from_col=to_col
+        #check if there are valis jumps
+        jumps_list=Rules.get_valid_moves_jump(board_list, new_from_row, new_from_col)#valid jumps where it landed
+        return len(jumps_list)>0
+
+
 
     @staticmethod 
     def check_valid_move(board_list, ptype,from_row, from_col, to_row,to_col):
@@ -235,7 +234,7 @@ class Rules(object):
         return Rules.validate_move(board_list, from_row, from_col, to_row, to_col)
     
     @staticmethod
-    def check_become_king(board_list, to_row,to_col,UP,DOWN,size):
+    def check_become_king(board_list, to_row,to_col,UP=Constants().UP,DOWN=Constants().DOWN,size=8):
         """
         Check if the new position of the checker is to be a king
         size: how many cell has the board
