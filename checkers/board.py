@@ -59,7 +59,7 @@ class Board(Constants, Rules):
         Note: Dark pieces should be ALWAYS on the top of the board.
         """
         def interpret_initial_board(initial_board):
-            self.board_list=[ #start with empty
+            board_list=[ #start with empty
                 sum([[None] for _ in range(self.size)], []),
                 sum([[None] for _ in range(self.size)], []),
                 sum([[None] for _ in range(self.size)], []),
@@ -72,20 +72,23 @@ class Board(Constants, Rules):
             for i in range(self.size):
                 for j in range(self.size):
                     if initial_board[i][j]==self.DARK:
-                        self.board_list[i][j]=DarkPiece()
+                        board_list[i][j]=DarkPiece()
                     elif initial_board[i][j]==self.LIGHT:
-                        self.board_list[i][j]=LightPiece()
+                        board_list[i][j]=LightPiece()
                     elif initial_board[i][j]==self.DARK_KING:
                         piece=DarkPiece()
                         piece.make_king()
-                        self.board_list[i][j]=piece
+                        board_list[i][j]=piece
                     elif initial_board[i][j]==self.LIGHT_KING:
                         piece=LightPiece()
                         piece.make_king()
-                        self.board_list[i][j]=piece
+                        board_list[i][j]=piece
+                    elif initial_board[i][j]==self.EMPTY:
+                        pass
                     else:
                         rospy.logerr("Initial board not valid")
                         rospy.signal_shutdown("Initial board not valid")
+            return board_list
 
 
         half_size = self.size//2
