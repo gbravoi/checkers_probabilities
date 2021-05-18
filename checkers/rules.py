@@ -253,11 +253,13 @@ class Rules(object):
         #openent lost all his pieces?
         oponent_no_pieces= len(Rules.get_positions(board_list, opponent_ptype, board_size)) == 0
         if oponent_no_pieces:
+            rospy.loginfo('Rules: End game because oponent has no pieces')
             return True
         
         #check if oponent can move
         oponent_cant_move=len(Rules.generate_valid_moves(board_list, opponent_ptype, board_size)) == 0
         if oponent_cant_move:
+            rospy.loginfo('Rules: End game because oponent can not move')
             return True
 
         return False
